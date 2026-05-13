@@ -1,0 +1,2 @@
+copy submodules/OreUIForEveryone/assets %project.cache%/assets
+copy submodules/OreUIForEveryone/contributor.txt %project.cache%/OreUIForEveryone-Contributors.csv

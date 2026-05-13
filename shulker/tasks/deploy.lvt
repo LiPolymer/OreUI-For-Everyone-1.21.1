@@ -1,0 +1,12 @@
+run settings.lvt
+run merge.lvt
+import shulker.magick
+makeCopy \.(?:psd|aseprite)$
+pbrEx
+psdCvt
+import shulker.ase
+ase %project.src% %project.cache%
+delete ^targetPath^
+copy %project.cache% ^targetPath^
+makeCleanup
+echo "&aDEPLOY SUCCEED!"

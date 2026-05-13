@@ -1,0 +1,12 @@
+echo "=====&3Build - %project.name%&r====="
+run merge.lvt
+import shulker.magick
+makeCopy .*\.psd
+pbrEx
+psdCvt
+copy LICENSE %project.cache%/LICENSE
+import shulker.ase
+ase %project.src% %project.cache%
+makePkg
+makeCleanup
+echo "&aBUILD SUCCEED!"
