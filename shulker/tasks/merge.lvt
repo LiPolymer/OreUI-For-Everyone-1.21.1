@@ -1,2 +1,2 @@
-copy submodules/OreUIForEveryone/assets %project.cache%/assets
+copy submodules/OreUIForEveryone/assets %project.cache%/assets true .*ae2.*|.*advanced_ae.*
 copy submodules/OreUIForEveryone/contributor.txt %project.cache%/OreUIForEveryone-Contributors.csv
