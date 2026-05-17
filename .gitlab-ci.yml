@@ -8,6 +8,7 @@ build_job:
     - if: '($CI_COMMIT_MESSAGE !~ /^doc:.*/ && $CI_COMMIT_DESCRIPTION !~ /!noCi/ && $CI_COMMIT_MESSAGE !~ /^chore:.*/) || $CI_COMMIT_DESCRIPTION =~ /!forceCi/'
   script:
     - 'git submodule init'
+    - 'git submodule update'
     - 'chmod +x ./srdk'
     - './srdk build'
   artifacts:
