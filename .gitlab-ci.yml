@@ -14,4 +14,4 @@ build_job:
   artifacts:
     expire_in: 1 week  # save gitlab server space, we copy the files we need to deploy folder later on
     paths:
-      - '/builds/SiliconWorkGroup/FrontierUI/build/'
+      - '/builds/LiPolymer/OreUI-For-Everyone-1.21.1/build/'
