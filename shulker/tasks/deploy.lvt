@@ -1,6 +1,6 @@
 run settings.lvt
-run merge.lvt
 import shulker.magick
+run merge.lvt
 makeCopy .*\.(?:psd|aseprite)$
 pbrEx
 psdCvt

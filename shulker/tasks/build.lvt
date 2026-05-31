@@ -1,6 +1,6 @@
 echo "=====&3Build - %project.name%&r====="
-run merge.lvt
 import shulker.magick
+run merge.lvt
 makeCopy .*\.psd$
 pbrEx
 psdCvt
