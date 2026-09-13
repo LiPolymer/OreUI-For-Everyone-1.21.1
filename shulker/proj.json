@@ -1,9 +1,14 @@
 {
   "ProjectName": "OreUIForEveryone_1.21.1patch",
-  "Version": "0.f4625e1.0",
+  "Version": "4529d331.0",
   "RootPath": "./src/",
   "OutPath": "./build/",
   "DefaultEnvVars": {
     "alias.startAction.dev": "c task dev"
-  }
+  },
+  "Extensions": [
+    "gl:LiPolymer/ShulkerRDK#ShulkerRDK.Aseprite@B0.20",
+    "gl:LiPolymer/ShulkerRDK#ShulkerRDK.ResourceMagick@B0.20",
+    "gl:LiPolymer/ShulkerRDK#ShulkerRDK.RRT@B0.20"
+  ]
 }
