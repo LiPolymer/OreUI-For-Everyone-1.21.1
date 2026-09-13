@@ -1,6 +1,6 @@
 {
   "ProjectName": "OreUIForEveryone_1.21.1patch",
-  "Version": "4529d331.0",
+  "Version": "3.0.0",
   "RootPath": "./src/",
   "OutPath": "./build/",
   "DefaultEnvVars": {
