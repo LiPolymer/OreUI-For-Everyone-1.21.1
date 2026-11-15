@@ -1,6 +1,10 @@
 # 合并 1.20.1 资源, 调用前引入 shulker.magick
-copy submodules/OreUIForEveryone/assets %project.cache%/assets true .*ae2.*|.*advanced_ae.*|.*\.psd
-psdcvt submodules/OreUIForEveryone/assets %project.cache%/assets
+copy submodules/OreUIForEveryone/assets %project.cache%/assetsLegacy true .*ae2.*|.*advanced_ae.*|.*\.psd
+psdcvt submodules/OreUIForEveryone/assets %project.cache%/assetsLegacy
+
+mrvc %project.cache%/assetsLegacy %project.cache%/assets 15 34
+delete %project.cache%/assetsLegacy
+
 copy submodules/OreUIForEveryone/contributor.txt %project.cache%/contributors.csv
 copy submodules/OreUIForEveryone/README.md %project.cache%/README_1.20.1.md
 copy README.md %project.cache%/README.md

@@ -8,7 +8,7 @@
   },
   "Extensions": [
     "gl:LiPolymer/ShulkerRDK#ShulkerRDK.Aseprite@B0.20",
-    "gl:LiPolymer/ShulkerRDK#ShulkerRDK.ResourceMagick@B0.20",
+    "gl:LiPolymer/ShulkerRDK#ShulkerRDK.ResourceMagick@B0.21",
     "gl:LiPolymer/ShulkerRDK#ShulkerRDK.RRT@B0.20"
   ]
 }
