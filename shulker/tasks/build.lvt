@@ -1,12 +1,13 @@
 echo "=====&3Build - %project.name%&r====="
 import shulker.magick
 run merge.lvt
-makeCopy .*\.psd$
+makeCopy .*\.(?:psd|aseprite)$
 pbrEx
 psdCvt
 copy LICENSE %project.cache%/LICENSE
 import shulker.ase
 ase %project.src% %project.cache%
+ifr @ver %project.ver% %project.cache%/pack.mcmeta
 makePkg
 makeCleanup
 echo "&aBUILD SUCCEED!"

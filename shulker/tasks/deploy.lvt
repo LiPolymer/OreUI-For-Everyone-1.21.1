@@ -6,6 +6,7 @@ pbrEx
 psdCvt
 import shulker.ase
 ase %project.src% %project.cache%
+ifr @ver %project.ver% %project.cache%/pack.mcmeta
 delete ^targetPath^
 copy %project.cache% ^targetPath^
 makeCleanup
