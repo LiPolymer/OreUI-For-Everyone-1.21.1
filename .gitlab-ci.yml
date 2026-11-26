@@ -1,18 +1,93 @@
 stages:
+  - sync
   - build
 
-before_script:
-  - git submodule init
-  - git submodule update
-  - apt-get update -qq && apt-get install -y -qq jq
-  - chmod +x srdk
+variables:
+  GIT_SUBMODULE_STRATEGY: none
+
+sync_job:
+  stage: sync
+  image:
+    name: alpine/git:latest
+    entrypoint: [""]
+  resource_group: submodule-sync
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+  script:
+    - |
+      set -eu
+      if [ -z "${CI_COMMIT_BRANCH:-}" ]; then
+        echo "Error: CI_COMMIT_BRANCH is empty; trigger must target a branch." >&2
+        exit 1
+      fi
+
+      git config --global --add safe.directory '*'
+      git fetch --no-tags origin "refs/heads/${CI_COMMIT_REF_NAME}"
+      git checkout --detach FETCH_HEAD
+
+      git submodule sync --recursive
+      git submodule update --init --remote
+
+      if git diff --quiet -- submodules/OreUIForEveryone; then
+        echo "Submodule is already up to date; skipping commit and push."
+        {
+          echo "SUBMODULE_UPDATED=false"
+          echo "SYNCED_SHA=$(git rev-parse HEAD)"
+        } > sync.env
+        exit 0
+      fi
+
+      SUB_SHORT_SHA="$(git -C submodules/OreUIForEveryone rev-parse --short HEAD)"
+      git config user.name "${GITLAB_USER_NAME:-GitLab CI}"
+      git config user.email "${GITLAB_USER_EMAIL:-ci@gitlab.com}"
+      git add submodules/OreUIForEveryone
+      git commit -m "sync: 同步上游 (${SUB_SHORT_SHA})"
+
+      NEW_SHA="$(git rev-parse HEAD)"
+      git push "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" "HEAD:refs/heads/${CI_COMMIT_REF_NAME}"
+
+      {
+        echo "SUBMODULE_UPDATED=true"
+        echo "SYNCED_SHA=${NEW_SHA}"
+      } > sync.env
+      echo "Submodule synced and pushed at ${NEW_SHA}."
+  artifacts:
+    reports:
+      dotenv: sync.env
+
 build_job:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:10.0
+  needs:
+    - job: sync_job
+      optional: true
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
     - if: '($CI_COMMIT_MESSAGE !~ /^doc:.*/ && $CI_COMMIT_DESCRIPTION !~ /!noCi/ && $CI_COMMIT_MESSAGE !~ /^chore:.*/) || $CI_COMMIT_DESCRIPTION =~ /!forceCi/'
   script:
-    - ./srdk build
+    - |
+      set -eu
+      if [ "${CI_PIPELINE_SOURCE:-}" = "trigger" ]; then
+        if [ "${SUBMODULE_UPDATED:-}" != "true" ]; then
+          echo "Submodule unchanged (SUBMODULE_UPDATED=${SUBMODULE_UPDATED:-unset}); skipping build."
+          exit 0
+        fi
+        if [ -z "${SYNCED_SHA:-}" ]; then
+          echo "Error: SYNCED_SHA is missing in trigger pipeline." >&2
+          exit 1
+        fi
+        git fetch --no-tags origin "${CI_COMMIT_REF_NAME}"
+        if ! git cat-file -e "${SYNCED_SHA}^{commit}" 2>/dev/null; then
+          git fetch --no-tags origin "${SYNCED_SHA}"
+        fi
+        git checkout --detach "${SYNCED_SHA}"
+      fi
+
+      git submodule sync --recursive
+      git submodule update --init --recursive
+      apt-get update -qq && apt-get install -y -qq jq
+      chmod +x srdk
+      ./srdk build
   artifacts:
     expire_in: 1 week
     paths:

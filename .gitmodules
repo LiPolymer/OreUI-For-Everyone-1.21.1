@@ -1,3 +1,4 @@
 [submodule "submodules/OreUIForEveryone"]
 	path = submodules/OreUIForEveryone
 	url = https://github.com/ReConstruction-127/OreUI-For-Everyone-1.20.1
+	branch = main
