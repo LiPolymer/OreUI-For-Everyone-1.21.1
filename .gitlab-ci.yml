@@ -41,7 +41,11 @@ sync_job:
       git config user.name "${GITLAB_USER_NAME:-GitLab CI}"
       git config user.email "${GITLAB_USER_EMAIL:-ci@gitlab.com}"
       git add submodules/OreUIForEveryone
-      git commit -m "sync: 同步上游 (${SUB_SHORT_SHA})"
+      if [ -n "${CI_PIPELINE_URL:-}" ]; then
+        git commit -m "sync: 同步上游 (${SUB_SHORT_SHA})" -m "Pipeline: ${CI_PIPELINE_URL}"
+      else
+        git commit -m "sync: 同步上游 (${SUB_SHORT_SHA})"
+      fi
 
       NEW_SHA="$(git rev-parse HEAD)"
       git push "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" "HEAD:refs/heads/${CI_COMMIT_REF_NAME}"
