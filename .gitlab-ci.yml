@@ -28,8 +28,22 @@ sync_job:
       git submodule sync --recursive
       git submodule update --init --remote
 
-      if git diff --quiet -- submodules/OreUIForEveryone; then
-        echo "Submodule is already up to date; skipping commit and push."
+      UPDATED_SUBMODULES=""
+      for sm_path in $(git submodule --quiet foreach 'printf "%s\n" "$sm_path"'); do
+        if ! git diff --quiet -- "$sm_path"; then
+          sm_short_sha="$(git -C "$sm_path" rev-parse --short HEAD)"
+          sm_name="${sm_path#submodules/}"
+          git add -- "$sm_path"
+          if [ -z "$UPDATED_SUBMODULES" ]; then
+            UPDATED_SUBMODULES="${sm_name}@${sm_short_sha}"
+          else
+            UPDATED_SUBMODULES="${UPDATED_SUBMODULES}, ${sm_name}@${sm_short_sha}"
+          fi
+        fi
+      done
+
+      if [ -z "$UPDATED_SUBMODULES" ]; then
+        echo "All submodules are already up to date; skipping commit and push."
         {
           echo "SUBMODULE_UPDATED=false"
           echo "SYNCED_SHA=$(git rev-parse HEAD)"
@@ -37,14 +51,12 @@ sync_job:
         exit 0
       fi
 
-      SUB_SHORT_SHA="$(git -C submodules/OreUIForEveryone rev-parse --short HEAD)"
       git config user.name "${GITLAB_USER_NAME:-GitLab CI}"
       git config user.email "fish@lipoly.ink"
-      git add submodules/OreUIForEveryone
       if [ -n "${CI_PIPELINE_URL:-}" ]; then
-        git commit -m "sync: 同步上游 (${SUB_SHORT_SHA})" -m "Pipeline: ${CI_PIPELINE_URL}"
+        git commit -m "sync: 同步上游 (${UPDATED_SUBMODULES})" -m "Pipeline: ${CI_PIPELINE_URL}"
       else
-        git commit -m "sync: 同步上游 (${SUB_SHORT_SHA})"
+        git commit -m "sync: 同步上游 (${UPDATED_SUBMODULES})"
       fi
 
       NEW_SHA="$(git rev-parse HEAD)"
@@ -54,7 +66,7 @@ sync_job:
         echo "SUBMODULE_UPDATED=true"
         echo "SYNCED_SHA=${NEW_SHA}"
       } > sync.env
-      echo "Submodule synced and pushed at ${NEW_SHA}."
+      echo "Submodules synced (${UPDATED_SUBMODULES}) and pushed at ${NEW_SHA}."
   artifacts:
     reports:
       dotenv: sync.env

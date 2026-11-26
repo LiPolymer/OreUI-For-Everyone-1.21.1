@@ -1,10 +1,16 @@
 # 合并 1.20.1 资源, 调用前引入 shulker.magick
+echo 拷贝源项目
 copy submodules/OreUIForEveryone/assets %project.cache%/assetsLegacy true .*ae2.*|.*advanced_ae.*|.*\.psd
 psdcvt submodules/OreUIForEveryone/assets %project.cache%/assetsLegacy
 
+echo "升级包版本 1.20.1->1.21.1"
 mrvc %project.cache%/assetsLegacy %project.cache%/assets 15 34
 delete %project.cache%/assetsLegacy
 
+echo "并入 1.21.1 Extended"
+copy submodules/OreUIExtended/assets %project.cache%/assets true
+
+echo "并入杂项资源"
 copy submodules/OreUIForEveryone/contributor.txt %project.cache%/contributors.csv
 copy submodules/OreUIForEveryone/README.md %project.cache%/README_1.20.1.md
 copy README.md %project.cache%/README.md
