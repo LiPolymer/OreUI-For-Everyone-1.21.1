@@ -26,14 +26,14 @@
 
 ## 构建本项目
 
-构建需要 [.NET 8.0](https://dotnet.microsoft.com/download/dotnet/8.0) 运行环境。
+构建需要 [.NET 10.0](https://dotnet.microsoft.com/download/dotnet/10.0) 运行环境。
 
 Windows（PowerShell）：
 
 ```powershell
 git clone --recursive https://gitlab.com/LiPolymer/OreUI-For-Everyone-1.21.1.git
 cd OreUI-For-Everyone-1.21.1
-.\srdk.ps1 build
+./srdk build
 ```
 
 Linux / macOS：
@@ -61,7 +61,7 @@ chmod +x srdk
 
 - [OreUI-For-Everyone-1.20.1](https://github.com/ReConstruction-127/OreUI-For-Everyone-1.20.1) - 上游主项目（1.20.1）
 - [OreUIForEveryone-1.21.1-Extended](https://github.com/OnDreamQwQ/OreUIForEveryone-1.21.1-Extended) - 1.21.1 扩展包（已并入本项目构建）
-- [ShulkerRDK](https://gitlab.com/LiPolymer/ShulkerRDK) - 本项目使用的资源包构建工具
+- [ShulkerRDK](https://github.com/LiPolymer/ShulkerRDK) - 本项目使用的资源包构建工具
 
 ## 致谢
 
