@@ -39,7 +39,7 @@ sync_job:
 
       SUB_SHORT_SHA="$(git -C submodules/OreUIForEveryone rev-parse --short HEAD)"
       git config user.name "${GITLAB_USER_NAME:-GitLab CI}"
-      git config user.email "${GITLAB_USER_EMAIL:-ci@gitlab.com}"
+      git config user.email "fish@lipoly.ink"
       git add submodules/OreUIForEveryone
       if [ -n "${CI_PIPELINE_URL:-}" ]; then
         git commit -m "sync: 同步上游 (${SUB_SHORT_SHA})" -m "Pipeline: ${CI_PIPELINE_URL}"
